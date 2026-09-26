@@ -1,0 +1,6 @@
+* -text
+# Third-party and imported evidence bytes are checked by SHA-256.
+third_party/** -text
+paper/results/** -text
+*.pdf binary
+*.pptx binary

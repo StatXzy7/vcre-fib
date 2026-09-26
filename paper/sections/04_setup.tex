@@ -1,0 +1,20 @@
+\paragraph{Data and supervision.}
+Our cohort was re-curated from the institutional ultrasound database described by \citet{xu2026sfibai}. The prediction target is the existing expert-assigned ultrasound appearance score. We cleaned and organized these scores and the existing clinician-drawn lesion boxes, and recovered six-class view labels from acquisition-plane identifiers. The cohort contains 108,709 ROI images from 6,373 patients across 35 centers. Training, validation, and test comprise 83,722/4,906, 20,880/1,227, and 4,107/240 images/patients, respectively. Patients do not overlap across splits; all four test centers are represented in training. All models use the same grading data and splits, with spatial supervision determined by retained modules. Boxes at the highest recorded score form weak targets, not exhaustive contours. All 4,107 test images have view annotations, and 4,035 meet weak-target evaluation criteria. Appendix~\ref{sec:appendix-cohort} describes annotation provenance; Table~\ref{tab:views} lists view names and counts.
+
+\paragraph{Compared models.}
+We compare SFibAI, full VCRE-Fib, and two deletion variants (Table~\ref{tab:matrix}). \emph{w/o View} retains weak localization and regional grading but removes the view head, view-specific adapters, posterior mixture, and view loss. \emph{w/o Weak Loc.} retains view-conditioned grading but removes the localization head and weak-box loss, setting $a_u=1$ in Equation~\ref{eq:regional}. Both retain the support and global paths and are trained independently, rather than fine-tuned from the full model. The contrasts evaluate whole model designs; they do not isolate supervision, capacity, and information routing from one another.
+\inputtable{tab02_matrix}
+
+\paragraph{Training, selection, and freezing.}
+All four use the same random seed (2026), ResNet-50, ImageNet-1K-V2 initialization, $512\times512$ inputs, global batch 24, bfloat16 training, AdamW \citep{loshchilov2019adamw}, and the same real-score hybrid grading objective. All methods, including full VCRE-Fib, use a common 90-epoch cap for the training comparison. The reported trajectories cover epochs 1--90, and validation selects from epochs 21--90 by lower $\risk$, lower image COR, then earlier epoch. The common recipe is specified in Appendix~\ref{sec:appendix-implementation}. Checkpoints, configurations, and the endpoint are frozen before test comparison; test determines the observed ranking.
+
+\paragraph{Evaluation questions.}
+We ask whether each spatially informed variant improves on the baseline, how jointly using the modules changes grading and spatial outputs, and what information the outputs expose. The lower-is-better primary endpoint is
+\begin{equation}
+\risk=0.4R_{\mathrm{image}}+0.4R_{\mathrm{patient\text{-}max}}+0.2R_{\mathrm{center}} .
+\label{eq:risk}
+\end{equation}
+Each component uses the locked clinical objective risk (COR); the center term weights per-center patient-max COR by square-root patient counts. Patient-median is reported separately. Differences describe observed results, without significance testing. Bold table values indicate the best unrounded result per metric, including exact ties.
+
+\paragraph{Spatial outputs and visualization.}
+View metrics include accuracy/macro-F1; weak-target Dice/IoU use threshold 0.5. Four selected test cases spanning four true views illustrate the outputs, with two validation examples in the appendix. Case-selection criteria, patient deduplication, and common display settings are specified in Appendix~\ref{sec:appendix-case-protocol}.

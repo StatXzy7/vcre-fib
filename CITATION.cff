@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Please cite the VCRE-Fib manuscript and the software version used."
+type: software
+title: "VCRE-Fib: View-Conditioned Regional Evidence for Fine-Grained Ultrasound Grading of Schistosoma japonicum-Associated Liver Fibrosis"
+authors:
+  - name: "VCRE-Fib contributors"
+version: 0.1.0
+date-released: 2026-09-26
+license: Apache-2.0
+repository-code: "https://github.com/StatXzy7/vcre-fib"

@@ -1,0 +1,4 @@
+\subsection{资源测量}
+\label{sec:appendix-resources}
+\inputtable{tab09_resources}
+四个冻结模型均在同一 NVIDIA A100-SXM4-80GB 上测量，使用 PyTorch 2.11.0+cu128、FP32、关闭 TF32、$512\times512$ 输入。预热 50 次后进行 200 次同步墙钟计时。延迟按批次报告，输入已在 GPU 上，只计模型前向，不含加载与传输。峰值已分配显存以 MiB 表示。计算量只统计实际执行的 Conv2d/Linear，不含逐元素运算、池化与归一化；所报 FLOPs 为计数 MACs 的两倍。

@@ -1,0 +1,277 @@
+# SFibAI
+
+[![DOI](https://img.shields.io/badge/DOI-10.1038%2Fs41467--026--76287--9-blue)](https://doi.org/10.1038/s41467-026-76287-9)
+[![Journal](https://img.shields.io/badge/Journal-Nature%20Communications-green)](https://www.nature.com/articles/s41467-026-76287-9)
+[![License](https://img.shields.io/badge/License-Apache%202.0-orange)](LICENSE)
+
+SFibAI is the official code repository for the manuscript **"Deep Learning for Precision Grading of *Schistosoma japonicum*-induced Liver Fibrosis in Ultrasound Images"**, published in *Nature Communications* (2026): [https://www.nature.com/articles/s41467-026-76287-9](https://www.nature.com/articles/s41467-026-76287-9).
+
+## About the paper
+
+Key results from the manuscript, each independently reproducible with the scripts in this repository:
+
+- **Dataset** — multicentre cohort of **167,702** ultrasound images labelled on a 36-level ordinal scale (0.0–3.5) that maps onto the four clinical grades (F0–F3); **16,811** images reserved as an independent test set
+- **Fine-grained accuracy** — on the independent test set, **93.9%** of predictions were within 0.5 grades of expert labels, with a **mean absolute error of 0.116**
+- **Deployability** — a deployable version ran on Windows and Android devices, processing each image in **< 400 ms**
+- **Scope** — supports scalable, more consistent ultrasound screening and follow-up for schistosomiasis-associated liver fibrosis in endemic regions
+
+## Features
+
+- **Fine-grained grading** — 36-class ordinal output (0.0–3.5, step 0.1), compatible with standard clinical grades (F0–F3)
+- **Hybrid loss** — Local KL Divergence + clinical-score MSE + clinical boundary penalty, with configurable weights
+- **backbone** — ResNet-50 (default)
+- **Training augmentation** — gamma correction, horizontal flip, HSV saturation/value jitter, RGB contrast/brightness, Gaussian noise, and class-frequency-aware ROI random crops when annotations are available
+- **Mixed-precision & DDP** — built-in AMP and DistributedDataParallel support
+
+## Repository layout
+
+```text
+SFibAI/
+├── README.md
+├── CITATION.cff
+├── environment.yml
+├── requirements.txt
+├── .gitignore
+├── artifacts/
+│   ├── README.md
+│   ├── figures/
+│   ├── sample_results/
+│   └── statistics/
+├── checkpoints/
+│   └── README.md
+├── data/
+│   ├── README.md
+│   └── seg_samples_500/
+│       ├── train/
+│       └── val/
+├── scripts/
+│   ├── figure_generation/
+│   ├── preprocessing/
+│   └── run/
+└── src/
+    ├── baselines/
+    │   └── README.md
+    └── sfibai/
+        ├── config.py
+        ├── train.py
+        ├── eval.py
+        ├── data/
+        │   ├── dataset.py
+        │   └── transforms.py
+        └── utils/
+            ├── __init__.py
+            ├── metrics.py
+            ├── models.py
+            └── visualization.py
+```
+
+## Environment setup
+
+The package lock files were generated from the local `cv` environment used for the reproducibility archive check.
+
+Key reference versions are pinned in `requirements.txt` and `environment.yml`, including Python 3.10.20, PyTorch 2.11.0+cu128, torchvision 0.26.0+cu128, NumPy 2.2.6, pandas 2.3.3, SciPy 1.15.2 and scikit-learn 1.7.2.
+
+Create a clean environment with conda:
+
+```bash
+conda env create -f environment.yml
+conda activate sfibai
+```
+
+Or install the main dependencies with pip:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Data layout
+
+The training code expects each dataset root to contain at minimum:
+
+```text
+<data_root>/
+├── train/
+│   ├── 0.0/            # Grade 0, fibrosis score 0.0
+│   │   ├── img001.jpg
+│   │   └── ...
+│   ├── 0.1/            # Grade 0, fibrosis score 0.1
+│   ├── 0.2/
+│   ├── ...
+│   ├── 1.0/            # Grade 1, fibrosis score 1.0
+│   ├── 1.1/
+│   ├── ...
+│   ├── 2.0/            # Grade 2, fibrosis score 2.0
+│   ├── ...
+│   ├── 3.0/            # Grade 3, fibrosis score 3.0
+│   ├── ...
+│   └── 3.5/            # Grade 3, fibrosis score 3.5
+└── val/
+    ├── 0.0/
+    ├── 0.1/
+    ├── ...
+    └── 3.5/
+```
+
+Optionally, YOLO-format ROI annotations can be provided to enable crop-based augmentation:
+
+```text
+<data_root>/
+├── train/
+│   └── (same structure as above)
+├── val/
+│   └── (same structure as above)
+├── train_label/        # YOLO-format .txt annotation files
+│   ├── img001.txt      # each line: class x_center y_center width height
+│   └── ...
+└── val_label/
+    └── ...
+```
+
+When annotation directories are absent, the dataset loader automatically disables cropping and loads images directly. The bundled sample data (`data/seg_samples_500/`) contains pre-segmented images and does not require annotation files.
+
+## Included sample data
+
+- `data/seg_samples_500/` — 500 representative pre-segmented ultrasound images organized by fibrosis grade (0.0–3.4), sufficient for a demonstration run of the training and evaluation pipeline.
+- `artifacts/sample_results/` — representative outputs preserved from the analysis workflow.
+
+The bundled sample data does not include ROI annotation files. `train.py` defaults to ROI-based random cropping for full annotated datasets, but cropping is automatically disabled when annotation directories are absent. For annotated training data, the dataset loader assigns 3--10 crop repeats per image according to class frequency, so minority labels receive more stochastic ROI crops than majority labels. The bundled run scripts use `--crop_mode none` for the sample data.
+
+The full study dataset and all training artifacts are **not** redistributed in this public repository.
+
+## Preprocessing (optional)
+
+If your raw ultrasound images contain device-UI backgrounds (text overlays, colored borders, thumbnails, etc.), you can use the bundled preprocessing script to extract the ultrasound ROI and generate YOLO-format annotation files:
+
+```bash
+python scripts/preprocessing/extract_roi.py \
+    --input_dir /path/to/raw_images/train \
+    --output_dir /path/to/processed/train \
+    --label_dir /path/to/processed/train_label
+```
+
+The script uses contour detection (mean-threshold binarisation) to locate the largest connected region in each image. Run `python scripts/preprocessing/extract_roi.py --help` for all available options. This step is **not required** if your images are already pre-segmented — in that case, simply train with `--crop_mode none`.
+
+## Quick start
+
+The manuscript checkpoint is not included in this repository. Training can start without an initialization checkpoint; evaluation requires a user-supplied trained checkpoint.
+
+### Training
+
+```bash
+python src/sfibai/train.py \
+  --root_dirs /path/to/data_root \
+  --backbone resnet50 \
+  --loss hybrid \
+  --alpha 1.0 --beta 0.02 --gamma 0.02 \
+  --epochs 120 \
+  --scheduler step \
+  --scheduler_step_size 15 \
+  --bs 32 \
+  --save_root artifacts/runs
+```
+
+Key arguments:
+
+| Argument | Default | Description |
+|---|---|---|
+| `--backbone` | `resnet50` | Backbone architecture (see table above) |
+| `--loss` | `hybrid` | Loss function: `kl`, `mse`, `boundary`, `kl_mse`, `kl_boundary`, `mse_boundary`, or `hybrid` |
+| `--alpha` | 1.0 | Weight for Local KL Divergence loss |
+| `--beta` | 0.02 | Weight for Expectation MSE loss |
+| `--gamma` | 0.02 | Weight for Boundary Penalty loss |
+| `--crop_mode` | `random` | Training crop strategy: `none`, `fixed`, `random`, `mixed` |
+| `--balance_crops` | enabled | Use class-frequency-aware crop repeats for annotated training images |
+| `--min_crops_per_image` | `3` | Minimum crop repeats assigned to annotated training images |
+| `--max_crops_per_image` | `10` | Maximum crop repeats; minority labels receive values closer to this maximum |
+| `--scheduler` | `step` | LR scheduler: `step` or `cos` |
+| `--scheduler_step_size` | `15` | StepLR step size; also used as `T_max` for cosine scheduling |
+| `--init_checkpoint` | — | Optional checkpoint used to initialize backbone weights before training |
+
+Run `python src/sfibai/train.py --help` for the full list.
+
+### Evaluation
+
+```bash
+python src/sfibai/eval.py \
+  --model_paths checkpoints/SFibAI.pth \
+  --root_dirs /path/to/data_root \
+  --save_dir artifacts/eval_results
+```
+
+The evaluation script generates:
+- Per-image prediction CSV
+- 36-class and 4-class (F0–F3) confusion matrices (PDF)
+- Clinical ROC curves for nine binary/composite scenarios (PDF)
+- Nine-scenario metrics CSV with AUC, 95% bootstrap CI, sensitivity, specificity, accuracy, precision, F1, kappa and MCC
+- Detailed metrics log file
+
+### Helper scripts
+
+```bash
+bash scripts/run/train.sh
+bash scripts/run/eval.sh
+```
+
+## Figure-generation scripts
+
+Utilities under `scripts/figure_generation/`:
+- `dataset_size_distri.py` — dataset distribution summaries
+- `feature_heatmap.py` — Grad-CAM++ feature visualisation, defaulting to Stage 1 (`layer1`)
+- `extract_features.py` — Stage 4/`avgpool` feature export for embedding visualisation
+- `plot_tsne.py` — t-SNE figure generation from exported features
+
+Outputs are saved to `artifacts/figures/` and `artifacts/statistics/`.
+
+Example t-SNE reproduction workflow:
+
+```bash
+python scripts/figure_generation/extract_features.py \
+  --model_path checkpoints/SFibAI.pth \
+  --root_dirs /path/to/data_root \
+  --mode val \
+  --save_path artifacts/feature_cache/sfibai_features.npz
+
+python scripts/figure_generation/plot_tsne.py \
+  --features artifacts/feature_cache/sfibai_features.npz \
+  --perplexity 30 \
+  --learning_rate auto \
+  --max_iter 1000 \
+  --init pca \
+  --random_state 42
+```
+
+## Reproduced baselines
+
+This repository also includes independent re-implementations of two comparison baselines described in the manuscript (Guo et al. radiomics + SVM, Lee et al. VGG-based). The original source code was not publicly accessible when this study was conducted.
+
+For baseline documentation, entry points and usage instructions, see **[`src/baselines/README.md`](src/baselines/README.md)**.
+
+## Additional documentation
+
+- [`data/README.md`](data/README.md) — data availability and expected layout
+- [`artifacts/README.md`](artifacts/README.md) — sample outputs and generated artifacts
+- [`checkpoints/README.md`](checkpoints/README.md) — checkpoint placement and expectations
+
+## Citation
+
+If you use this repository or the SFibAI method in your work, please cite the article:
+
+```bibtex
+@article{xu2026sfibai,
+  title   = {Deep learning for precision grading of {Schistosoma japonicum}-induced liver fibrosis in ultrasound images},
+  author  = {Xu, Ziyang and Zhang, Jianfeng and Wu, Tingting and Hua, Haiyong and Yang, Kun and Zeng, Tieyong},
+  journal = {Nature Communications},
+  year    = {2026},
+  doi     = {10.1038/s41467-026-76287-9},
+  url     = {https://www.nature.com/articles/s41467-026-76287-9},
+  issn    = {2041-1723}
+}
+```
+
+**Links**
+
+- Article: [https://doi.org/10.1038/s41467-026-76287-9](https://doi.org/10.1038/s41467-026-76287-9)
+- Code repository: [https://github.com/StatXzy7/SFibAI](https://github.com/StatXzy7/SFibAI)
+- Machine-readable citation metadata: [`CITATION.cff`](CITATION.cff) (GitHub renders it via the "Cite this repository" button)
+
+The metadata (title, authors, DOI, links) is kept consistent across this README, `CITATION.cff`, Crossref and Semantic Scholar so that citation tools and AI assistants can retrieve it unambiguously.

@@ -1,0 +1,43 @@
+\subsection{Task and design overview}
+Given an ultrasound ROI image $x$, VCRE-Fib predicts a severity distribution, acquisition view, and weak-localization map. Training uses grading labels $y$, six-class view labels, and lesion-location annotations; inference requires neither view nor box annotations. We retain the SFibAI score grid $g_k=k/10$, $k=0,\ldots,35$, and four-grade thresholds of 0.5, 1.5, and 2.5 \citep{xu2026sfibai}. The design in Figure~\ref{fig:architecture} learns spatial cues, forms regional evidence in its view context, and combines that evidence with global judgment.
+
+\subsection{Global judgment and spatial cues}
+A global path preserves whole-image context so that regional evidence complements an overall prediction. A ResNet-50 encoder \citep{he2016resnet} produces $h\in\mathbb{R}^{2048}$ and layer-3 features $C\in\mathbb{R}^{1024\times H\times W}$. With $512\times512$ inputs, $H=W=32$. The context logits are $b=H_c(h)\in\mathbb{R}^{36}$, view probabilities are $q=\softmax(H_v(h))\in\mathbb{R}^{6}$, and weak localization is $a=\sigma(L(C))$. The view and localization predictions are learned through auxiliary supervision and retained as spatial outputs for inspection.
+
+Local boxes identify clinician-marked regions without specifying exhaustive contours. The implemented weak-box objective combines an inside-response term with a constraint on the outside response fraction. It guides spatial learning but supplies no complete lesion-contour target. Whether learned responses extend beyond a local annotation and correspond to broader pathology is therefore an empirical question examined through actual cases.
+
+\subsection{Conditioning before regional aggregation}
+Local features are interpreted in their anatomical context. A $1\times1$ projection produces $Z=P(C)\in\mathbb{R}^{128\times H\times W}$. Six view adapters $T_v$, each a $128\rightarrow128$ pointwise convolution and GELU, share a $128\rightarrow64\rightarrow36$ MLP $f$:
+\begin{equation}
+s_{v,u}=f(T_v(Z)_u),\quad v=1,\ldots,6,\quad u=1,\ldots,HW .
+\label{eq:local}
+\end{equation}
+Conditioning occurs before pooling and thus changes the grading evidence at each location. The vector $s_{v,u}$ is a local logit contribution candidate, not a separately calibrated regional severity score.
+
+\subsection{Localization-guided regional grading}
+Weak localization supplies spatial relevance, while a support head $V=\operatorname{softplus}(S(Z))$ learns aggregation weights through grading. They organize the regional correction:
+\begin{equation}
+c_{v,u}=\lambda\frac{V_u\sg(a_u)}{\max(\sum_{u'}V_{u'},\epsilon)}s_{v,u},
+\qquad D_v=\sum_u c_{v,u}.
+\label{eq:regional}
+\end{equation}
+The reference configuration uses $\lambda=1$ and $\epsilon=10^{-8}$, with zero correction when total support is at most $\epsilon$. Normalization by $\sum V$ allows uniformly low localization responses to attenuate the correction. The operator $\sg$ stops gradients at the indicated interface.
+
+Regional evidence is added to global context, and view probabilities retain uncertainty across conditional judgments:
+\begin{equation}
+p_v=\softmax(b+D_v),\qquad
+p=\sum_v\sg(q_v)p_v,\qquad
+\hat y=\sum_k g_kp_k.
+\label{eq:mixture}
+\end{equation}
+The model mixes conditional probabilities. Localization therefore participates in the grading path while remaining an explicit output.
+
+\subsection{Supervision and inference outputs}
+Following shared-representation multitask learning \citep{caruana1997multitask}, the training objective is
+\begin{equation}
+\mathcal L=\mathcal L_{\mathrm{grade}}(p,y)+0.1\mathcal L_{\mathrm{view}}+0.1\mathcal L_{\mathrm{box}}.
+\label{eq:loss}
+\end{equation}
+View prediction uses cross-entropy; the weak-box loss uses valid local boxes, as specified in Appendix~\ref{sec:appendix-implementation}. The grading interface consumes $\log p$. Gradients are stopped at the grading uses of $q$ and $a$, while auxiliary losses still update the encoder and grading still trains the context, local-evidence, and support paths. VCRE-Fib uses the same hybrid grading-loss formulation and weights as SFibAI: both compute MSE and the clinical-grade boundary penalty using the real-valued scores $\hat y=0.1\sum_k kp_k$ and $y=0.1j$, where $j$ is the target bin. Appendix~\ref{sec:appendix-implementation} gives the common grading-loss formulation.
+
+Inference returns $\hat y$, the view $\arg\max_v q_v$, and localization $a$. Side-by-side original images, clinician annotations, and predictions expose the spatial outputs available for review. Output completeness here means retaining both view and regional information alongside the score; it does not mean complete lesion coverage.

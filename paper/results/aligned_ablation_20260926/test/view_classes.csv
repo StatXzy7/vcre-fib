@@ -1,0 +1,13 @@
+method,model,seed,split,label,name,support,recall,predicted_frequency
+SYNAP,SynAP-Fib,2026,test,1,Subxiphoid sagittal plane (left lobe of the liver),694,0.8472622478386167,0.18310202093985878
+SYNAP,SynAP-Fib,2026,test,2,Left subcostal transverse plane (left lobe and sagittal segment of portal vein),699,0.6509298998569385,0.16922327733138545
+SYNAP,SynAP-Fib,2026,test,3,Right subcostal plane (second porta hepatis and confluence of three hepatic veins),689,0.5457184325108854,0.1658144631117604
+SYNAP,SynAP-Fib,2026,test,4,"Right subcostal plane (right hepatic lobe, right hepatic vein, diaphragm)",671,0.526080476900149,0.15412710007304603
+SYNAP,SynAP-Fib,2026,test,5,"Right intercostal oblique plane (right hepatic lobe, portal vein, gallbladder)",682,0.6686217008797654,0.15583150718285854
+SYNAP,SynAP-Fib,2026,test,6,Right intercostal oblique plane (right hepatic lobe and right kidney),672,0.7678571428571429,0.17190163136109082
+RE_WO_WEAKLOC,w/o Weak Localization,2026,test,1,Subxiphoid sagittal plane (left lobe of the liver),694,0.9365994236311239,0.1762843925006087
+RE_WO_WEAKLOC,w/o Weak Localization,2026,test,2,Left subcostal transverse plane (left lobe and sagittal segment of portal vein),699,0.748211731044349,0.16386656927197468
+RE_WO_WEAKLOC,w/o Weak Localization,2026,test,3,Right subcostal plane (second porta hepatis and confluence of three hepatic veins),689,0.5950653120464441,0.17871925980034087
+RE_WO_WEAKLOC,w/o Weak Localization,2026,test,4,"Right subcostal plane (right hepatic lobe, right hepatic vein, diaphragm)",671,0.587183308494784,0.16021426832237642
+RE_WO_WEAKLOC,w/o Weak Localization,2026,test,5,"Right intercostal oblique plane (right hepatic lobe, portal vein, gallbladder)",682,0.8152492668621701,0.16800584368151936
+RE_WO_WEAKLOC,w/o Weak Localization,2026,test,6,Right intercostal oblique plane (right hepatic lobe and right kidney),672,0.8571428571428571,0.15290966642317994

@@ -1,0 +1,15 @@
+VCRE-Fib
+Copyright 2026 VCRE-Fib contributors
+
+Original project code is licensed under the Apache License, Version 2.0.
+The repository contains code derived from SynAP-Fib / SFibAI-B.
+
+third_party/SFibAI is from StatXzy7/SFibAI at commit
+e5c2dc637c4a955fe305896644209d39a6a85fa6.
+Copyright 2025 Ziyang Xu and the SFibAI authors.
+Its original Apache-2.0 license is retained in third_party/SFibAI/LICENSE.
+
+The ICLR style and bibliography style, natbib.sty, and fancyhdr.sty retain
+their original authorship and license notices. They are not relicensed here.
+Publication figures and manuscript text are supplied as publication artifacts.
+The code license does not grant access to the private clinical dataset.

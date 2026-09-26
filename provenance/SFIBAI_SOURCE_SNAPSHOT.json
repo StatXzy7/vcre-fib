@@ -1,0 +1,49 @@
+{
+  "access_date": "2026-09-25",
+  "repository": "https://github.com/StatXzy7/SFibAI",
+  "commit": "e5c2dc637c4a955fe305896644209d39a6a85fa6",
+  "method_name": "SFibAI",
+  "files": [
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/StatXzy7/SFibAI/e5c2dc637c4a955fe305896644209d39a6a85fa6/README.md",
+      "sha256": "0c121370304fc74cc97554b742215c8af3955c519336c442b907dbb65624e255"
+    },
+    {
+      "path": "CITATION.cff",
+      "url": "https://raw.githubusercontent.com/StatXzy7/SFibAI/e5c2dc637c4a955fe305896644209d39a6a85fa6/CITATION.cff",
+      "sha256": "644ad835cc541bb88aef5b84b010fd730c1d306a1e869f192a08111bca76fa99"
+    },
+    {
+      "path": "src/sfibai/train.py",
+      "url": "https://raw.githubusercontent.com/StatXzy7/SFibAI/e5c2dc637c4a955fe305896644209d39a6a85fa6/src/sfibai/train.py",
+      "sha256": "bf1921cdca522ca03898c90968457c3d407a0d9405bb30b24fed7011b4601a91"
+    },
+    {
+      "path": "src/sfibai/config.py",
+      "url": "https://raw.githubusercontent.com/StatXzy7/SFibAI/e5c2dc637c4a955fe305896644209d39a6a85fa6/src/sfibai/config.py",
+      "sha256": "1c7061ae42718ae61a65a751c23ed747783196e2ef7ab555a8e0233b5cef98b1"
+    },
+    {
+      "path": "src/sfibai/utils/models.py",
+      "url": "https://raw.githubusercontent.com/StatXzy7/SFibAI/e5c2dc637c4a955fe305896644209d39a6a85fa6/src/sfibai/utils/models.py",
+      "sha256": "76c987b75852c387c86736442dbb8b4a5a99b7ae9b4c72f8d56c0f728d6d3209"
+    },
+    {
+      "path": "src/sfibai/utils/scoring.py",
+      "url": "https://raw.githubusercontent.com/StatXzy7/SFibAI/e5c2dc637c4a955fe305896644209d39a6a85fa6/src/sfibai/utils/scoring.py",
+      "sha256": "572a1162d3ea30b2459afdb2ddc422c1a097fde412665308a75a53f79e8fc86c"
+    },
+    {
+      "path": "src/sfibai/data/transforms.py",
+      "url": "https://raw.githubusercontent.com/StatXzy7/SFibAI/e5c2dc637c4a955fe305896644209d39a6a85fa6/src/sfibai/data/transforms.py",
+      "sha256": "fb6487f72421383fa495f4d99eb789c5513138f3d585feb56e280cd656eba093"
+    },
+    {
+      "path": "src/baselines/baseline-methods.md",
+      "url": "https://raw.githubusercontent.com/StatXzy7/SFibAI/e5c2dc637c4a955fe305896644209d39a6a85fa6/src/baselines/baseline-methods.md",
+      "sha256": "74e4bfb766fa7b589a198f6e2e0b0b60ec75ca21defb6acdcbc120e34aa36a12"
+    }
+  ],
+  "execution": "SOURCE_READ_ONLY_NO_UPSTREAM_CODE_EXECUTED"
+}

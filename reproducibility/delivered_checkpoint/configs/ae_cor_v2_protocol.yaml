@@ -1,0 +1,88 @@
+round: AE_COR_v2
+dataset:
+  version: schisto_2024_clean_v4
+  root: data/processed/schisto_2024_clean_v4
+  manifest: manifests/images.csv
+  annotations: manifests/annotations.jsonl
+  split_column: split
+  label: image_label_max
+  position: position_norm
+  lesion_target: max_grade_union
+arms:
+  A: {resize: stretch, position: false, lesion: false}
+  B: {resize: letterbox, position: false, lesion: false}
+  C: {resize: stretch, position: true, lesion: false}
+  D: {resize: stretch, position: false, lesion: true}
+  E: {resize: stretch, position: true, lesion: true}
+seeds: [2026]
+model:
+  backbone: resnet50
+  weights: IMAGENET1K_V2
+  gate_max: 0.5
+  residual_init_scale: 0.001
+  auxiliary_gradient_boundary: bidirectional_detached
+preprocessing:
+  image_size: 512
+  normalization: imagenet
+  train_augmentation:
+    rot90_nonzero_probability: 0.7
+    saturation_probability: 0.5
+    saturation_range: [0.75, 1.25]
+    horizontal_flip_probability: 0.0
+    vertical_flip_probability: 0.0
+    random_crop: false
+  paired_arm_sample_order_and_augmentation: true
+  lesion_geometry:
+    transform_with_image: true
+    systematic_mismatch: hard_fail
+    one_pixel_or_attention_cell_boundary_difference: warning
+training:
+  epochs: 120
+  early_stopping: false
+  batch_size: 24
+  amp: true
+  optimizer: AdamW
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  scheduler: StepLR
+  scheduler_step_size: 15
+  scheduler_gamma: 0.6
+  position_loss_weight: 0.1
+  weak_box_loss_weight: 0.1
+  weak_box_inside_weight: 1.0
+  weak_box_outside_weight: 1.0
+  inside_pool_temperature: 10.0
+checkpoint_selection:
+  primary: r_final
+  direction: min
+  eligible_epochs: [21, 120]
+  tie_breakers: [image_cor, earlier_epoch]
+  smoothing: false
+  bootstrap: false
+  checkpoints_retained: [best_model_only, last_full_state]
+test:
+  evaluate: [best, last]
+  official_ranking_checkpoint: best
+  paired_bootstrap:
+    resamples: 10000
+    stratification: center
+    resampling_unit: patient_cluster
+    shared_draws: true
+evaluation:
+  canonical_evaluator_runs: 1
+  independent_cpu_recalculation: false
+  r_final_weights: {image: 0.4, patient_max: 0.4, center_balanced_patient_max: 0.2}
+  center_weight: sqrt_patient_count
+runtime_benchmark:
+  arm: E
+  batch_size: 24
+  measured_batches: 300
+  num_workers_candidates: [4, 6, 8]
+  compile_minimum_speedup: 0.08
+formal_queue:
+  order: [A, B, C, D, E]
+  seed: 2026
+  device: local_rtx_5090d
+  failure_policy: fail_fast_scientific_error
+  automatic_strict_resume_limit: 1
+  watchdog_minutes: 45

@@ -1,0 +1,3 @@
+\subsection{患者级分级详细结果}\label{sec:appendix-patient}
+将图像评分分别按 patient-max 和 patient-median 聚合后，完整模型仍具有最低的 COR（分别为 0.200528 和 0.154344），同时取得最低的 median MAE（0.339273；表~\ref{tab:patient}）和中心平衡 COR（0.177453；正文表~\mainref{tab:main}）。这一结果使主终点收益得到不同聚合方式下的风险指标支持。不过，风险降低并不意味着每个阈值指标均最优：w/o Weak Loc.\ 的 patient-max $\pm0.5$ 准确率更高（67.50\%），w/o View 的 median 四级准确率更高（72.08\%）。完整模型的优势因此主要表现为整体风险及多项评分指标的共同改善。
+\inputtable{tab06_patient}

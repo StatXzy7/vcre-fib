@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vcre-fib"
+version = "0.1.0"
+description = "VCRE-Fib models, evaluation, experiment sources, and manuscript build assets"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+dependencies = [
+  "torch>=2.4", "torchvision>=0.19", "numpy", "pandas", "opencv-python",
+  "scikit-learn", "tensorboard", "matplotlib", "PyYAML", "optuna", "Pillow", "tqdm", "seaborn"
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+paper = ["PyMuPDF"]
+
+[project.urls]
+Repository = "https://github.com/StatXzy7/vcre-fib"
+
+[tool.setuptools.packages.find]
+where = ["code/src", "research/autosearch/src"]
+include = ["sfibai_b*", "synap_search*"]
+namespaces = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "research/main_experiment/test_runtime.py"]
+pythonpath = ["code/src", "research/autosearch/src", "research/main_experiment"]
+addopts = "--basetemp=.tmp/pytest"
+markers = ["smoke: bounded diagnostics, not formal experimental results"]

@@ -1,0 +1,13 @@
+\paragraph{血吸虫病相关纤维化与超声分级。}
+血吸虫感染与已经形成的器官病变需要相互补充的评估：寄生虫学、血清学及分子检测面向感染状态，影像检查则刻画肝脾异常 \citep{weerakoon2015diagnosis,sah2015imaging}。肝活检提供组织学信息，但其侵入性推动了非侵入性评估的发展；纤维化检测本身的局限也要求谨慎解释输出 \citep{bravo2001biopsy,patel2020limitations}。本文的预测目标是专家给出的超声影像评分。
+
+对于日本血吸虫病，纤维化的解剖分布尤其重要。一项纵向队列研究发现，超声可见的肝实质纤维化与感染史相关，严重病变在治疗后的逆转有限 \citep{carlton2010morbidity}。Basel 方案在亚洲血吸虫病评估中区分门脉与间隔性纤维化形态 \citep{richter2025basel}。这些发现与影像学研究 \citep{sah2015imaging} 共同说明，在预测严重程度时保留解剖背景和可见的区域征象具有意义。
+
+计算方法从 B-mode 纹理特征与支持向量机 \citep{yeh2003fibrosis}，发展到多参数 ultrasomics \citep{li2019ultrasomics}、面向血吸虫病的放射组学 \citep{guo2024radiomics}，以及基于 METAVIR 目标的卷积分类模型 \citep{lee2020ultrasound}。SFibAI 提供了本文沿用的细粒度评分表示 \citep{xu2026sfibai}。这些研究的采集方式、标签和队列存在差异，因此本文在相同队列划分上与 SFibAI 直接比较，并研究切面与病灶位置信息如何参与评分。
+
+\paragraph{解剖背景与区域证据学习。}
+多任务学习通过相关目标共享表征 \citep{caruana1997multitask}；SonoNet 展示了胎儿超声标准切面识别与解剖定位 \citep{baumgartner2017sononet}。区域聚合进一步将局部信息连接到图像层面的判断。Attention-based MIL 学习聚合权重 \citep{ilse2018attention}；病理影像方法通过 CLAM 的实例聚类 \citep{lu2021clam}、TransMIL 的实例关联 \citep{shao2021transmil} 以及 Additive MIL 的加性局部贡献 \citep{javed2022additive} 扩展了这一路径。FiLM 提供了条件化特征变换的通用机制 \citep{perez2018film}。VCRE-Fib 借鉴共享学习、条件化与聚合，在扫查切面背景下解释区域特征，再与全局判断融合。本文区域来自单幅超声图像，具有监督信号的切面与定位输出也实际进入评分计算。
+
+\paragraph{弱定位与可检查的预测。}
+BoxSup 与 BoxInst 使用边界框学习分割，无需逐像素掩膜 \citep{dai2015boxsup,tian2021boxinst}。本文的框标记局部异常区域，可能未包围整个病灶，因此框外响应仍是供临床复核的候选区域。概念瓶颈模型显式提供受到监督的中间概念 \citep{koh2020concept}；VCRE-Fib 提供切面和定位输出，同时保留全局路径。Grad-CAM、Grad-CAM++ 与 integrated gradients 属于事后归因方法 \citep{selvaraju2017gradcam,chattopadhay2018gradcampp,sundararajan2017axiomatic}。本文经训练获得的定位参与区域聚合，但这一作用本身不足以建立归因忠实性。显著图的 sanity checks 提示应在视觉合理性之外检验解释 \citep{adebayo2018sanity}。当前与医生标注的对照支持对空间对应关系的检查。
+

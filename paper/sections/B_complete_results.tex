@@ -1,0 +1,16 @@
+\subsection{Test set primary results}
+The frozen, validation-selected checkpoints are evaluated on 4,107 images, 240 patients, and four centers. The order is VCRE-Fib, w/o Weak Loc., w/o View, and SFibAI (Table~\ref{tab:comparison}), with lower $\risk$ indicating better performance. Main Tables~\mainref{tab:main}--\mainref{tab:auxiliary} report the primary, image, and spatial outcomes; Appendix~\ref{sec:appendix-patient} gives the detailed patient-level metrics.
+\inputtable{tab04_comparison}
+
+\paragraph{Metric definitions.}
+Let $e=|\hat y-y|$ and let $d$ be the absolute difference in four-level grades with thresholds 0.5, 1.5, and 2.5. The locked per-item risk is
+\[
+\operatorname{COR}=0.35e/3.5+0.15\mathbf{1}(e>0.3)+0.15\mathbf{1}(e>0.5)+0.25d/3+0.10\mathbf{1}(d\ge2).
+\]
+Patient-max and patient-median aggregate reference and predicted scores separately. Center-balanced COR uses square-root patient-count weights. TMAE is $\operatorname{mean}\max(e-0.5,0)$ and severe-error rate is $\operatorname{mean}\mathbf{1}(e>1.0)$, distinct from the two-grade error term inside COR.
+\input{sections/B_patient_results}
+\subsection{Additional grading metrics and center-level results}
+Per-center estimates are descriptive; one center has two patients. Test/val exports retain per-grade support/recall and all COR terms. Four-grade probabilities sum the 36 bins; image AUPRC uses average precision and ECE uses ten bins. Class-wise AUROC/AUPRC are reported as N/A when either positive or negative examples are absent. Patient probabilities are not aggregated.
+\inputtable{tab14_additional}
+\inputtable{tab15_centers}
+\FloatBarrier

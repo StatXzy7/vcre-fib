@@ -1,0 +1,42 @@
+\documentclass{article}
+\def\ChineseVersion{1}
+\usepackage{iclr2027_conference,times}
+\input{preamble}
+\title{VCRE-Fib：基于切面条件区域证据的\newline 日本血吸虫病相关肝纤维化超声精细分级}
+\hypersetup{pdftitle={VCRE-Fib：基于切面条件区域证据的日本血吸虫病相关肝纤维化超声精细分级}}
+\author{匿名作者}
+\begin{document}
+\maketitle
+\begin{abstract}
+\input{sections/zh/00_abstract}
+\end{abstract}
+\section{引言}\label{sec:introduction}
+\input{sections/zh/01_introduction}
+\input{figures/fig01_architecture}
+\section{相关工作}\label{sec:related}
+\input{sections/zh/02_related_work}
+\section{VCRE-Fib：切面条件区域证据分级}\label{sec:method}
+\input{sections/zh/03_method}
+\section{实验设计}\label{sec:setup}
+\input{sections/zh/04_setup}
+\section{分级表现与空间预测结果}\label{sec:results}
+\input{sections/zh/05_results}
+\section{讨论}\label{sec:discussion}
+\input{sections/zh/06_discussion}
+\section{结论}\label{sec:conclusion}
+\input{sections/zh/07_conclusion}
+\label{main-text-end}
+\clearpage
+\section*{伦理声明}\label{post-main-start}
+本研究对超声图像及相关标注的回顾性使用已获得相应机构伦理批准。所有参与者均在入组前签署书面知情同意。
+\section*{可复现性声明}
+第~\ref{sec:method}--\ref{sec:setup} 节给出模型结构与评价协议。附录~\ref{sec:appendix-implementation} 说明数据整理和共同训练设置，附录~\ref{sec:appendix-results} 报告完整测试集指标及资源测量，附录~\ref{sec:appendix-analyses} 说明病例选择与显示规则，附录~\ref{sec:appendix-selection} 提供检查点选择及四模型训练轨迹。
+\section*{AI 使用声明}
+OpenAI Codex 协助检查实现、起草、翻译和修改论文、核对参考文献、编译文档，以及呈现既有结果与病例图，未生成实验观测。作者对科学内容及其解释负责。
+\bibliographystyle{iclr2027_conference}
+\bibliography{references}
+\section*{附录}
+\addcontentsline{toc}{section}{附录}
+\label{appendix-start}
+\input{appendix_zh}
+\end{document}

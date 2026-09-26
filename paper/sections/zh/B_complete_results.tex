@@ -1,0 +1,16 @@
+\subsection{Test set 主结果}
+冻结的验证集选择的检查点在 4,107 图、240 患者、4 中心上评价。排序为 VCRE-Fib、w/o Weak Loc.、w/o View、SFibAI（表~\ref{tab:comparison}），$\risk$ 越低越好。正文表~\mainref{tab:main}--\mainref{tab:auxiliary} 报告主终点、图像与空间结果；患者级详细指标见附录~\ref{sec:appendix-patient}。
+\inputtable{tab04_comparison}
+
+\paragraph{指标定义。}
+令 $e=|\hat y-y|$，$d$ 为阈值 0.5、1.5、2.5 对应的四级等级绝对差。锁定的单项风险为
+\[
+\operatorname{COR}=0.35e/3.5+0.15\mathbf{1}(e>0.3)+0.15\mathbf{1}(e>0.5)+0.25d/3+0.10\mathbf{1}(d\ge2).
+\]
+Patient-max 和 patient-median 两种方法均对参考评分与预测评分分别进行患者内聚合。中心平衡 COR 按患者数平方根加权。TMAE 为 $\operatorname{mean}\max(e-0.5,0)$，严重错误率为 $\operatorname{mean}\mathbf{1}(e>1.0)$，与 COR 中的跨两级错误不同。
+\input{sections/zh/B_patient_results}
+\subsection{补充分级指标与中心结果}
+各中心估计是描述性的，其中一个中心仅有两名患者。测试集与验证集导出保留逐级支持数、召回率和 COR 各分项。四级概率由 36 个 bin 按等级求和；图像 AUPRC 使用 average precision，ECE 使用十个分箱。缺少正例或负例时，逐类 AUROC/AUPRC 记 N/A；不作患者概率聚合。
+\inputtable{tab14_additional}
+\inputtable{tab15_centers}
+\FloatBarrier

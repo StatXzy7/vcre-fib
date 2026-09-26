@@ -1,0 +1,20 @@
+\paragraph{数据与监督。}
+本文队列由 \citet{xu2026sfibai} 所述机构超声数据库重新清洗整理而得，预测目标为既有的专家超声表现评分。我们清洗整理这些评分及既有医生病灶框，并从采集时记录的切面编号中提取六类切面标签。队列包含 35 个中心的 6,373 名患者、108,709 张 ROI 图像。训练集（train）、验证集（validation）和测试集（test）的图像数/患者数分别为 83,722/4,906、20,880/1,227、4,107/240。患者在集合之间不重叠，测试集的四个中心均在训练中出现。四模型使用相同评分数据与划分，空间监督由所保留模块决定。最高记录分数对应的框构成弱目标，并非穷尽性轮廓。全部 4,107 张测试图像均有切面标注，其中 4,035 张满足弱目标评价条件。附录~\ref{sec:appendix-cohort} 说明标注来源，表~\ref{tab:views} 列出切面名称和计数。
+
+\paragraph{比较模型。}
+本文比较 SFibAI、完整 VCRE-Fib 及两个删除变体（表~\ref{tab:matrix}）。\emph{w/o View} 保留弱定位和区域评分，移除切面头、切面专属适配器、后验混合与切面损失。\emph{w/o Weak Loc.} 保留切面条件化评分，移除定位头和弱框损失，并在式~\ref{eq:regional} 中令 $a_u=1$。两个变体均保留支持路径与全局路径，独立训练，并非从完整模型微调。这里比较的是模型设计整体，未将监督、容量和信息参与方式的影响逐一分离。
+\inputtable{tab02_matrix}
+
+\paragraph{训练、选择与冻结。}
+四模型均使用相同随机种子（2026）、ResNet-50、ImageNet-1K-V2 初始化、$512\times512$ 输入、全局 batch 24、bfloat16 训练、AdamW \citep{loshchilov2019adamw}，以及相同的真实分值混合评分目标。包括完整 VCRE-Fib 在内的所有方法均以 90 epoch 为共同训练比较上限，所报告轨迹覆盖第 1--90 epoch。在验证集上从第 21--90 epoch 中依次按较低 $\risk$、较低 image COR、较早 epoch 的顺序选择检查点。共同训练设置见附录~\ref{sec:appendix-implementation}。检查点、配置和主终点在测试集比较前冻结，测试集决定观测排名。
+
+\paragraph{评价问题。}
+本文考察各空间变体是否改善基线、联合使用两类模块后分级与空间输出如何变化，以及输出呈现了哪些可检查信息。越低越好的主终点为
+\begin{equation}
+\risk=0.4R_{\mathrm{image}}+0.4R_{\mathrm{patient\text{-}max}}+0.2R_{\mathrm{center}} .
+\label{eq:risk}
+\end{equation}
+各项采用锁定的临床目标风险 COR；中心项以患者数平方根加权各中心 patient-max COR，patient-median 独立报告。差异描述本次观测，未作显著性检验。表格依据未取整数值逐指标加粗最优结果，精确并列者同时加粗。
+
+\paragraph{空间输出与可视化。}
+切面报告 accuracy/macro-F1，弱目标 Dice/IoU 使用阈值 0.5。正文展示覆盖四种真实切面的四例筛选测试病例，附录另列两例验证病例。病例筛选条件、患者去重和统一显示设置见附录~\ref{sec:appendix-case-protocol}；这些病例用于说明输出信息。

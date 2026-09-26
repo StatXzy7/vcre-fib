@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sfibai-b"
+version = "1.0.0"
+description = "Data V4 A-E paired ablation pipeline with canonical COR evaluation."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "pandas",
+  "opencv-python",
+  "torch",
+  "torchvision",
+  "tensorboard",
+  "matplotlib",
+  "scikit-learn",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "--basetemp=tmp_pytest_active"
+markers = [
+  "smoke: bounded local GPU end-to-end checks excluded from formal results",
+]

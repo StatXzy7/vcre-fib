@@ -1,0 +1,16 @@
+# Portable dependency set. Install a matching torch/torchvision pair for your GPU.
+# The versions used for release checks are recorded in provenance/VALIDATION.md.
+torch>=2.4
+torchvision>=0.19
+numpy
+pandas
+opencv-python
+scikit-learn
+tensorboard
+matplotlib
+PyYAML
+optuna
+Pillow
+tqdm
+seaborn
+pytest
