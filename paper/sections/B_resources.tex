@@ -1,4 +1,0 @@
-\subsection{Resource measurements}
-\label{sec:appendix-resources}
-\inputtable{tab09_resources}
-All four frozen models were measured on the same NVIDIA A100-SXM4-80GB with PyTorch 2.11.0+cu128, FP32, TF32 disabled, and $512\times512$ inputs. Fifty warm-up iterations preceded 200 synchronized wall-time measurements. Latency is per batch, excludes loading/transfer, and covers the model forward with inputs already on the GPU. Peak allocated memory is reported in MiB. Counted Conv2d/Linear operations exclude elementwise, pooling, and normalization; FLOPs are twice the reported MACs.

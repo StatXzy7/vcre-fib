@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import argparse
-import csv
 import hashlib
 import io
 import json
@@ -13,16 +12,14 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = "provenance/RELEASE_MANIFEST.json"
-TEXT = {".py", ".md", ".toml", ".yml", ".yaml", ".tex", ".sty", ".bst", ".bib", ".csv", ".json", ".cff", ".txt"}
+IMPORT_MANIFEST = "provenance/IMPORT_MANIFEST.json"
+TEXT = {".py", ".md", ".toml", ".yml", ".yaml", ".json", ".cff", ".txt"}
 FORBIDDEN_SUFFIXES = {".pt", ".pth", ".ckpt", ".safetensors", ".npy", ".npz", ".parquet", ".h5", ".hdf5", ".dcm", ".nii", ".jsonl", ".pem", ".key", ".zip", ".gz"}
 FORBIDDEN_DIRECTORIES = {"development", "outputs", "runs", "checkpoints", "research-private", ".ssh", ".aws", ".git", "__pycache__"}
 MEDIA = {
     "paper/figures/assets/fig01_architecture.pdf",
-    "paper/figures/assets/fig06_cases.pdf",
-    "paper/figures/assets/fig06_validation_cases.pdf",
-    "paper/figures/assets/training_curves.pdf",
-    "paper/figures/assets/synap_loss_components.pdf",
     "paper/figures/editable/Figure1.pptx",
+    "paper/figures/previews/fig01_architecture.png",
 }
 PATTERNS = {
     "private key": re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----"),
@@ -47,6 +44,8 @@ def audit(path: str, payload: bytes) -> list[str]:
     relative = Path(path)
     suffix = relative.suffix.lower()
     failures: list[str] = []
+    if suffix in {".tex", ".bib", ".sty", ".bst", ".csv"} or path.lower() == "citation.cff":
+        failures.append("manuscript, results, or project citation metadata are not released")
     parts = {part.lower() for part in relative.parts}
     if suffix in FORBIDDEN_SUFFIXES or parts & FORBIDDEN_DIRECTORIES or relative.parts[0].lower() == "data":
         failures.append("forbidden private artifact")
@@ -71,13 +70,6 @@ def audit(path: str, payload: bytes) -> list[str]:
                 failures.append(name)
         if suffix == ".json" and path not in {"provenance/IMPORT_MANIFEST.json", "provenance/SFIBAI_SOURCE_SNAPSHOT.json", MANIFEST}:
             failures.append("JSON outside source-inventory allowlist")
-        if suffix == ".csv":
-            allowed = path.startswith("paper/results/aligned_ablation_20260926/") or path == "paper/results/training_90_four_models/training_curves_90.csv"
-            if not allowed:
-                failures.append("CSV outside aggregate-paper allowlist")
-            columns = next(csv.reader(io.StringIO(text)), [])
-            if set(columns) & {"patient_uid", "image_uid", "image_path", "patient_id", "image_id"}:
-                failures.append("patient/image-level table")
     if suffix == ".pptx":
         with zipfile.ZipFile(io.BytesIO(payload)) as archive:
             for member in archive.namelist():
@@ -89,6 +81,17 @@ def audit(path: str, payload: bytes) -> list[str]:
                     if 'TargetMode="External"' in content:
                         failures.append("external presentation relationship")
     return failures
+
+
+def missing_imports(payloads: dict[str, bytes]) -> list[str]:
+    """Catch source dependencies accidentally excluded from the Git inventory."""
+    if IMPORT_MANIFEST not in payloads:
+        return [f"{IMPORT_MANIFEST}: required source inventory missing"]
+    imported = json.loads(payloads[IMPORT_MANIFEST])["files"]
+    return [
+        f"{item['path']}: imported source missing from publication inventory"
+        for item in imported if item["path"] not in payloads
+    ]
 
 
 def index_mismatches(payloads: dict[str, bytes], root: Path = ROOT) -> list[str]:
@@ -134,6 +137,7 @@ def main() -> None:
         errors += [f"{relative}: {error}" for error in audit(relative, payload)]
         if relative != MANIFEST:
             inventory[relative] = {"sha256": hashlib.sha256(payload).hexdigest(), "bytes": len(payload)}
+    errors += missing_imports(payloads)
     if not args.write_manifest:
         errors += index_mismatches(payloads)
     if errors:

@@ -1,4 +1,4 @@
-"""Build the bilingual, multi-file manuscript without accessing clinical data."""
+"""Build a separately supplied private manuscript; no manuscript text is distributed."""
 from __future__ import annotations
 
 import argparse
@@ -6,12 +6,10 @@ from pathlib import Path
 import shutil
 import subprocess
 
-ROOT = Path(__file__).resolve().parents[1]
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--language", choices=("en", "zh", "all"), default="all")
+    parser.add_argument("--paper-root", type=Path, required=True, help="External directory containing the private LaTeX sources")
     args = parser.parse_args()
     latexmk = shutil.which("latexmk")
     if latexmk is None:
@@ -24,7 +22,7 @@ def main() -> None:
         for entry in ("main", "supplementary"):
             subprocess.run(
                 [latexmk, engine, "-interaction=nonstopmode", "-halt-on-error", f"{entry}{suffix}.tex"],
-                cwd=ROOT / "paper", check=True,
+                cwd=args.paper_root, check=True,
             )
 
 

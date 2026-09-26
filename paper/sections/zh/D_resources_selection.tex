@@ -1,5 +1,0 @@
-对于 SFibAI、w/o View、w/o Weak Loc.\ 和完整 VCRE-Fib，验证集所选 epoch 分别为 65、80、39、47，$\risk$ 为 0.172661、0.157844、0.159315、0.156067。验证集含 20,880 张图像、1,227 名患者和 33 个中心。附录表~\ref{tab:freeze} 记录四个冻结检查点，图~\ref{fig:training} 展示相同 90 epoch 上限下的四条训练轨迹。这些记录交代检查点选择来源，模型的观测排序仍由测试集主终点确定。
-\inputtable{tab10_freeze}
-四模型均用四 GPU、SyncBatchNorm 和全局 batch 24，共同训练设置见附录~\ref{sec:appendix-implementation}。在验证集上从第 21--90 epoch 中依次按较低 $\risk$、较低 image COR、较早 epoch 的顺序选择检查点，并在测试集评价前冻结。图~\ref{fig:training} 展示全部 90 个逐轮记录，未作平滑。各模型总损失包含不同的辅助项，用于模型内部训练诊断。图~\ref{fig:losses} 展示完整模型的损失分项。
-\input{figures/fig08_training}
-\FloatBarrier

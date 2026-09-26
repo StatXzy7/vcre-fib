@@ -9,7 +9,5 @@ e5c2dc637c4a955fe305896644209d39a6a85fa6.
 Copyright 2025 Ziyang Xu and the SFibAI authors.
 Its original Apache-2.0 license is retained in third_party/SFibAI/LICENSE.
 
-The ICLR style and bibliography style, natbib.sty, and fancyhdr.sty retain
-their original authorship and license notices. They are not relicensed here.
-Publication figures and manuscript text are supplied as publication artifacts.
+The main figure is included as a composed illustration.
 The code license does not grant access to the private clinical dataset.

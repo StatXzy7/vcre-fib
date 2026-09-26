@@ -4,3 +4,4 @@ third_party/** -text
 paper/results/** -text
 *.pdf binary
 *.pptx binary
+*.png binary

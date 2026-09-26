@@ -13,13 +13,14 @@ LABELS = ("SFibAI", "w/o View", "w/o Weak Loc.", "VCRE-Fib")
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source", type=Path, required=True, help="Private aggregate training CSV")
     parser.add_argument("--output", type=Path, default=PAPER.parent / ".tmp/training_curves.pdf")
     args = parser.parse_args()
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    with (PAPER / "results/training_90_four_models/training_curves_90.csv").open(encoding="utf-8", newline="") as stream:
+    with args.source.open(encoding="utf-8", newline="") as stream:
         records = list(csv.DictReader(stream))
     fields = ("train_total", "val_R_final", "val_image_COR")
     if len(records) != 360 or {row["method"] for row in records} != set(METHODS):

@@ -1,5 +1,6 @@
 """Publication boundary tests use synthetic bytes only."""
 import importlib.util
+import json
 from pathlib import Path
 import subprocess
 
@@ -17,8 +18,10 @@ def test_unreviewed_images_rejected():
     assert guard.audit("paper/figures/assets/extra.png", b"synthetic")
 
 
-def test_aggregate_paper_table_allowed():
-    assert guard.audit("paper/results/aligned_ablation_20260926/test/primary.csv", b"method,R_final\nExample,0.2\n") == []
+def test_manuscript_results_and_project_citation_are_not_released():
+    assert guard.audit("paper/results/aligned_ablation_20260926/test/primary.csv", b"method,R_final\nExample,0.2\n")
+    assert guard.audit("paper/main.tex", b"Synthetic manuscript")
+    assert guard.audit("CITATION.cff", b"cff-version: 1.2.0")
 
 
 def test_private_data_and_uppercase_suffixes_fail_closed():
@@ -37,3 +40,19 @@ def test_unstaged_sanitization_cannot_hide_staged_bytes(tmp_path):
     assert guard.index_mismatches({"record.txt": path.read_bytes()}, tmp_path)
     subprocess.run(["git", "-c", "core.excludesFile=", "-C", str(tmp_path), "add", "record.txt"], check=True)
     assert guard.index_mismatches({"record.txt": path.read_bytes()}, tmp_path) == []
+
+
+def test_ignored_imported_source_is_not_a_complete_release(tmp_path):
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    source = "third_party/example/data/dataset.py"
+    (tmp_path / source).parent.mkdir(parents=True)
+    (tmp_path / source).write_text("# Synthetic dataset loader\n", encoding="utf-8")
+    manifest = tmp_path / guard.IMPORT_MANIFEST
+    manifest.parent.mkdir()
+    manifest.write_text(json.dumps({"files": [{"path": source}]}), encoding="utf-8")
+    (tmp_path / ".gitignore").write_text("data/\n", encoding="utf-8")
+    payloads = {name: (tmp_path / name).read_bytes() for name in guard.candidates(tmp_path)}
+    assert guard.missing_imports(payloads)
+    (tmp_path / ".gitignore").write_text("/data/\n", encoding="utf-8")
+    payloads = {name: (tmp_path / name).read_bytes() for name in guard.candidates(tmp_path)}
+    assert guard.missing_imports(payloads) == []

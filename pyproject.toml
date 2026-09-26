@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "vcre-fib"
 version = "0.1.0"
-description = "VCRE-Fib models, evaluation, experiment sources, and manuscript build assets"
+description = "VCRE-Fib models, training, evaluation, and visualization code"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
@@ -29,5 +29,5 @@ namespaces = false
 [tool.pytest.ini_options]
 testpaths = ["tests", "research/main_experiment/test_runtime.py"]
 pythonpath = ["code/src", "research/autosearch/src", "research/main_experiment"]
-addopts = "--basetemp=.tmp/pytest"
+addopts = "--basetemp=tmp_pytest_runtime"
 markers = ["smoke: bounded diagnostics, not formal experimental results"]

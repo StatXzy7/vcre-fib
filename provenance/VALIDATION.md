@@ -1,11 +1,15 @@
 # Release verification
 
-Checks performed for the initial source release on 2026-09-26:
+Checks performed for the source release on 2026-09-26/27:
 
 - Synthetic/model/loss/data-contract/evaluation/sampler and publication-guard tests:
-  57 passed, 1 skipped; includes uppercase/private-file publication checks, exact
-  staged-content matching, and source/metadata/order binding for case panels.
-- All four manuscript entry points compiled successfully with TeX Live 2026:
+  59 passed, 1 skipped locally; includes uppercase/private-file publication checks,
+  exact staged-content matching, case-panel binding, imported-source completeness,
+  and isolated pinned-baseline imports without data or weights.
+- An export containing only Git-staged files passed the same 59 tests (1 skipped)
+  and the exact publication inventory check without pre-existing temporary files.
+- Before manuscript text was withdrawn from the public tree, all four private
+  manuscript entry points compiled successfully with TeX Live 2026:
   English main 19 pages; Chinese main 17; supplementary 7 pages in each language.
   Existing duplicate PDF-destination warnings remain in supplementary builds.
 - A Python wheel was built and checked for both `sfibai_b` and `synap_search`.
@@ -21,6 +25,16 @@ Checks performed for the initial source release on 2026-09-26:
   attachments; the editable PPTX passed XML/external-link screening.
 - File inventory/UTF-8/credential-pattern/private-artifact checks are implemented by
   `tools/check_release.py`; the final inventory is recorded beside this file.
+- The first Linux CI run exposed a missing parent for pytest's temporary directory.
+  The configured base directory now sits directly under the checkout. The source
+  directory `third_party/SFibAI/src/sfibai/data` is included explicitly; the root
+  dataset ignore no longer excludes Python packages of the same name.
+
+The current release contains code and the main figure only. Manuscript text,
+aggregate results, and project citation metadata are absent from the current tree.
+The build and private-data checks above record local verification, not distributed
+paper assets or numerical-reproduction claims. GitHub CI results are available in
+the repository's Actions tab.
 
 No model training, new test inference, new bootstrap, or numerical replication of
 the paper's results was performed for this release. Read `docs/PROVENANCE.md` for

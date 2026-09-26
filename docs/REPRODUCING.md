@@ -1,7 +1,7 @@
 # Reproduction guide
 
-Read [PROVENANCE.md](PROVENANCE.md) first. Software checks and manuscript builds
-can run from this public repository. Full numerical reproduction additionally
+Read [PROVENANCE.md](PROVENANCE.md) first. Software checks can run from this public
+repository. Full numerical reproduction additionally
 requires authorized access to the private dataset, appropriate hardware, and
 resolution of the corrected full-model source/result binding.
 
@@ -11,7 +11,6 @@ resolution of the corrected full-model source/result binding.
 python -m pip install -e '.[test]'
 python -m pytest -q
 python tools/check_release.py
-python tools/build_paper.py --language all
 ```
 
 `sfibai_b` and `synap_search` retain their original package names for compatibility.
@@ -105,16 +104,16 @@ Set `VCRE_DELIVERY_ROOT` to your private delivery package, `VCRE_WORKSPACE` to t
 private workspace, and `VCRE_FIGURE_FONT` to an installed font supporting Chinese.
 These scripts consume the delivery's original private file schema. They are not
 called by the paper build. Case selection needs private predictions, image manifests,
-boxes and attention arrays; the public composed figure is sufficient for typesetting.
+boxes and attention arrays. Case panels require private inputs and are not distributed.
 
-## Paper assets and tables
+## Visualization and private build helpers
 
-The canonical manuscript build uses the committed `.tex` tables and composed PDFs.
-`paper/scripts/update_aligned_tables.py` regenerates the numerical table content
-from published aggregate CSVs, but manual table layout edits in the committed paper
-may differ; run it in a disposable checkout if preserving the exact layout matters.
-`paper/scripts/plot_training.py` provides a simple redraw from the 360-row aggregate
-CSV. The original final-layout plot, case importer, compact compositor and header
+Only the main figure is distributed. Manuscript text and numerical tables are not.
+`paper/scripts/update_aligned_tables.py` reads private aggregate CSVs and their
+source bindings under `$VCRE_PAPER_ROOT/results/aligned_ablation_20260926` and
+writes tables beneath that external root. `paper/scripts/plot_training.py --source
+/path/to/private/training_curves_90.csv` redraws the original 360-row aggregate
+format. Its CSV is not included. The original final-layout plot, case importer, compact compositor and header
 restyler are also included in `reproducibility/paper_tools/`. Set `VCRE_PAPER_ROOT`
 to a private generation directory with the expected inputs; its default is the
 ignored `.tmp/paper-generation`. The plot expects its original `--source` directory
@@ -129,5 +128,6 @@ and the original panel PDF; it rejects reordering, relabeling or source drift.
 Intermediate case panels and bindings are not redistributed. Editable Figure 1 is
 `paper/figures/editable/Figure1.pptx`.
 
-Raw images and a patient mapping cannot be recovered from an authorized dataset
-release in this repository, because no such release has been made here.
+The optional helper `python tools/build_paper.py --paper-root /path/to/private/manuscript
+--language all` requires separately supplied main/supplementary LaTeX entry points
+and TeX Live. It cannot build a manuscript from this code-only release.

@@ -1,5 +1,5 @@
 # Private inputs and all experiment outputs
-data/
+/data/
 development/
 outputs/
 runs/
@@ -21,9 +21,6 @@ research-private/
 *.csv
 *.jsonl
 *.csv.gz
-!paper/results/aligned_ablation_20260926/**/*.csv
-!paper/results/aligned_ablation_20260926/resources.csv
-!paper/results/training_90_four_models/training_curves_90.csv
 .env
 .env.*
 *.pem
@@ -43,9 +40,19 @@ research-private/
 *.bmp
 *.pdf
 *.pptx
-!paper/figures/assets/*.pdf
+!paper/figures/assets/fig01_architecture.pdf
 !paper/figures/editable/Figure1.pptx
+!paper/figures/previews/fig01_architecture.png
 # Generated builds and local environments
+# Manuscript text, results, and project citation metadata are not released.
+*.tex
+*.bib
+*.sty
+*.bst
+/CITATION.cff
+/paper/results/
+/paper/tables/
+/paper/sections/
 __pycache__/
 *.py[cod]
 *.egg-info/

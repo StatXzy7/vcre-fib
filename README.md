@@ -1,78 +1,66 @@
 # VCRE-Fib
 
-**View-Conditioned Regional Evidence for Fine-Grained Ultrasound Grading of
-Schistosoma japonicum-Associated Liver Fibrosis**
+Code for view-conditioned regional evidence learning in ultrasound liver fibrosis grading.
 
-Code, experiment entry points, bilingual manuscript sources, and selected publication
-figures. Original code is licensed under **Apache-2.0**.
+[![Release checks](https://github.com/StatXzy7/vcre-fib/actions/workflows/ci.yml/badge.svg)](https://github.com/StatXzy7/vcre-fib/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 
-**Reproduction status:** manuscript build assets and the available implementation
-sources are included. The clinical dataset and trained weights are not released.
-The corrected full-model result delivery and the regional-method source have an
-unresolved source/result binding; this release does **not** certify end-to-end
-reproduction of every reported number. Read [the source map](docs/PROVENANCE.md)
-before selecting an implementation or interpreting a reproduced result.
+[![VCRE-Fib architecture: shared representation, view-specific regional evidence, and image-only predictions.](paper/figures/previews/fig01_architecture.png)](paper/figures/assets/fig01_architecture.pdf)
 
-| Entry | Contents |
-| --- | --- |
-| [Model](research/autosearch/src/synap_search/re_model.py) | View-conditioned regional architecture and probability mixture |
-| [Loss](research/autosearch/src/synap_search/re_training.py) | Grading, view, and weak-localization objectives |
-| [Shared code](code/src/sfibai_b/) | Preprocessing, model components, losses, canonical metrics |
-| [Experiments](research/main_experiment/) | Train, validation selection, freeze, test, resource profiling |
-| [Deletion variants](research/re_ablation/) | w/o View and w/o Weak Localization |
-| [Released SFibAI](third_party/SFibAI/) | Pinned baseline with its original license |
-| [Delivered checkpoint source](reproducibility/delivered_checkpoint/) | Separate source archive associated with the corrected result delivery |
-| [Case/evidence export](reproducibility/delivery_tools/) | Source scripts; private inputs are deliberately absent |
-| [Paper](paper/) | English/Chinese main text and supplementary material |
-| [Figures](paper/figures/) | Composed PDFs and editable Figure 1 PPTX |
-| [Reproduction guide](docs/REPRODUCING.md) | Installation, data contract, commands, and scope |
+[Vector figure](paper/figures/assets/fig01_architecture.pdf) ·
+[Editable PowerPoint](paper/figures/editable/Figure1.pptx) ·
+[Usage guide](docs/REPRODUCING.md) · [中文说明](README.zh-CN.md)
 
 ## Quick start
 
-Use Python 3.10 or later. Install a matching PyTorch/torchvision pair appropriate
-for your machine, then install the repository:
+Use Python 3.10 or later and a matching PyTorch/torchvision pair for your machine.
 
 ```bash
+git clone https://github.com/StatXzy7/vcre-fib.git
+cd vcre-fib
 python -m pip install -e '.[test]'
 python -m pytest -q
 python tools/check_release.py
 ```
 
-Tests use synthetic inputs and require no clinical data or pretrained download.
-Linux with a CUDA GPU is required for the formal training/evaluation runners;
-multi-GPU runs use NCCL. The release test environment is recorded in
-[provenance/VALIDATION.md](provenance/VALIDATION.md).
+Tests use synthetic inputs and require no clinical data or model weights. Formal
+training and evaluation use Linux, CUDA, and NCCL for multi-GPU execution.
 
-## Build the paper
+## Code
 
-Install TeX Live with `latexmk`, pdfLaTeX, XeLaTeX, and `ctex`:
+| Directory | Contents |
+| --- | --- |
+| [code/src/sfibai_b](code/src/sfibai_b/) | Data processing, model components, losses, and metrics |
+| [research/autosearch/src/synap_search](research/autosearch/src/synap_search/) | Regional model and training objective |
+| [research/main_experiment](research/main_experiment/) | Training, checkpoint selection, evaluation, and resource profiling |
+| [research/re_ablation](research/re_ablation/) | View and weak-localization deletion variants |
+| [third_party/SFibAI](third_party/SFibAI/) | Pinned baseline source with its original license |
+| [reproducibility](reproducibility/) | Historical implementation and visualization/export tools |
+| [tools](tools/) | Portable entry points, data preparation, and release checks |
+| [tests](tests/) | Synthetic/model/loss/data-contract tests |
+
+The [usage guide](docs/REPRODUCING.md) describes installation, private input formats,
+and experiment commands. Preview a command without starting training:
 
 ```bash
-python tools/build_paper.py --language all
+python tools/run_experiment.py train --method vcre --workspace /path/to/private-workspace --output /path/to/private-workspace/outputs/vcre --epochs 90 --gpus 1 --dry-run
 ```
 
-This produces `paper/main.pdf`, `paper/main_zh.pdf`, `paper/supplementary.pdf`,
-and `paper/supplementary_zh.pdf`. Composed figures and already reported aggregate
-tables are included, so the paper build needs neither images from the dataset
-nor checkpoints. Chinese text uses Microsoft YaHei when available and Fandol
-otherwise; font substitution can change pagination.
+## Availability
 
-## Data and publication boundary
+This release contains code and the main figure. Datasets, annotations, patient/image
+lists, predictions, weights, raw logs, manuscript text, and result tables are not
+distributed.
 
-No raw dataset, patient/image list, annotations, per-example predictions, attention
-arrays, checkpoints, secrets, or raw training logs are included. The CSV files under
-`paper/results/` contain only aggregate values already reported in the manuscript.
-The figures are the selected, composed publication panels; no standalone case
-images or case-to-patient mapping is distributed.
+The regional model and the historical delivered-checkpoint implementation are
+distinct. Their result/source correspondence remains unresolved; passing software
+tests does not establish numerical reproduction. See [source provenance](docs/PROVENANCE.md)
+and [software checks](provenance/VALIDATION.md).
 
-`.gitignore` is a convenience filter. `tools/check_release.py` also examines tracked
-files, rejects excluded artifacts even if force-added, and verifies a SHA-256
-inventory. See [CONTRIBUTING.md](CONTRIBUTING.md) for updates.
+## License and contributions
 
-## 中文说明
+Original code uses [Apache-2.0](LICENSE). Third-party code retains its original
+licenses and notices; see [NOTICE](NOTICE).
 
-这是 VCRE-Fib 的独立开源维护仓库，采用 Apache-2.0。临床数据、标注、患者及图像清单、
-逐图预测、注意力数组和模型权重暂不公开。仓库保留论文汇总表、已组合主图和中英文构建源文件。
-
-当前源码与最新完整模型结果的对应关系仍有待核清，详见 [来源说明](docs/PROVENANCE.md)。
-论文能够编译、软件测试通过，不代表所有实验数值已经独立复现。原研究目录及历史结果未被此仓库覆盖。
+English is the default maintenance language. Read [CONTRIBUTING.md](CONTRIBUTING.md)
+before making changes. Keep private inputs and experiment outputs outside this checkout.

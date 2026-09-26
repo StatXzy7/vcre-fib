@@ -12,7 +12,7 @@ experiment outputs, old paper drafts, and credentials were not imported.
 | `reproducibility/delivered_checkpoint/` | `source/round_snapshot` in the corrected `SynAP-Fib_seed2026` delivery |
 | `reproducibility/delivery_tools/` | Case selection, visualization, resource and evidence exporters shipped with that delivery |
 | `third_party/SFibAI/` | Published baseline at commit `e5c2dc637c4a955fe305896644209d39a6a85fa6` |
-| `paper/` | Active `iclr2027_re` manuscript; published aggregate rows preserved |
+| `paper/` | Main figure and table/plot generation code; no manuscript text or result tables |
 
 `provenance/IMPORT_MANIFEST.json` records original SHA-256 values for imported files,
 release SHA-256 values, and whether packaging modified them. The separate
@@ -32,7 +32,7 @@ state-dictionary layouts; they have not been silently aliased.
 
 The delivery's training metadata records 120 epochs. The paper displays a 90-epoch
 comparison prefix, while some full-model validation/trajectory/resource rows retain
-the earlier regional-run source. The manuscript's existing values are preserved.
+the earlier regional-run source. Manuscript text and result tables are not distributed.
 The release does not certify that its full-model test, validation, trajectory and
 resource rows all belong to one implementation/checkpoint. Resolving this requires
 an explicit, verified source/checkpoint/metric binding. No new experiment or result
@@ -54,14 +54,17 @@ checkpoint, or either version to reproduce all paper numbers merely by renaming 
   verification, and canonical test exports. Added an evaluation method identity check.
 - Main summary generation reads the recorded horizon and does not implicitly run
   the historical optional bootstrap. The bootstrap implementation remains available.
-- Added cross-platform paper build support, Chinese font fallback, publication
-  filtering, source inventory and synthetic release tests.
+- Added a build helper for separately supplied private manuscript sources,
+  publication filtering, source inventory and synthetic release tests.
+- Restricted the public assets to code and the main figure. Manuscript sources,
+  aggregate results and project citation metadata were removed from the current
+  tree after the initial publication; earlier Git history retains that first snapshot.
 - Preserved model and loss equations. The original research checkout, frozen source
   snapshot, metrics, predictions and checkpoints were not modified.
 
 ## Third-party material
 
 SFibAI retains its Apache-2.0 license and original notices. The baseline source-lock
-file verifies its cited public source files. ICLR style files and bundled LaTeX
-packages retain their embedded licenses and authorship. No pretrained ImageNet
+file verifies its pinned public source files, including its original attribution
+metadata. No pretrained ImageNet
 weights or other model binaries are redistributed.

@@ -1,29 +1,39 @@
-# Maintaining the public repository
+# Contributing
 
-Maintain public code and paper assets in this directory. Keep datasets and runs
-outside the checkout. The original research directory remains a provenance source;
-there is no automatic two-way synchronization or bulk copy from that directory.
+Use English for documentation, issues, pull requests, commits, and new comments.
+`README.md` is the primary entry point; `README.zh-CN.md` is an optional translation.
+Preserve historical source comments rather than rewriting frozen snapshots for style.
+
+Maintain public code here. Keep datasets, runs, manuscript text, result tables, and
+project citation metadata outside the checkout. There is no automatic bulk import
+or two-way synchronization with the private research directory.
 
 Before a commit:
 
 ```bash
 python -m pytest -q
-python tools/build_paper.py --language all  # if manuscript sources changed
 git diff --check
 python tools/check_release.py --write-manifest
 git add <reviewed-files> provenance/RELEASE_MANIFEST.json
 python tools/check_release.py
 ```
 
-Review the changed file list and manifest before committing. Stage explicit files.
-The final check requires the staged bytes to equal the audited bytes; an unstaged
-cleanup cannot conceal content still in Git's index. Manifest generation checks
-the working tree only and deliberately reports DRAFT until that final check passes.
-Do not bypass exclusions with `git add -f`. Do not publish raw experiment folders,
-annotations, split lists, per-example outputs, checkpoint binaries or credentials.
-New media requires a reviewed allowlist update; manuscript result changes require
-source/checkpoint/metric provenance. Report test results before validation diagnostics
-when reporting experiments; software-test success is not experiment completion.
+Review the changed file list and stage explicit paths. Manifest generation audits
+the working tree and reports DRAFT. The final check requires the exact audited
+bytes in Git's index, so an unstaged cleanup cannot conceal staged content.
+Every imported source must remain in the inventory, including source packages
+whose directory is named `data`. Deliberate release-scope changes must update the
+import inventory; do not alter the original identities of retained source files.
 
-New source changes do not update the historical `IMPORT_MANIFEST.json` identities.
-Document the change and update the current `RELEASE_MANIFEST.json` instead.
+Do not bypass exclusions with `git add -f`. Retain third-party licenses and notices.
+Code edits update `RELEASE_MANIFEST.json`; historical source hashes do not change.
+
+To regenerate the main figure preview from its PDF:
+
+```bash
+python -m pip install -e '.[paper]'
+python tools/render_readme_figure.py
+```
+
+Inspect the preview and stage the PDF, PNG, and release inventory together. New
+media requires an intentional allowlist change and content review.

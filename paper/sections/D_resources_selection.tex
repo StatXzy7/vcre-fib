@@ -1,5 +1,0 @@
-For SFibAI, w/o View, w/o Weak Loc., and full VCRE-Fib, validation selects epochs 65, 80, 39, and 47, with $\risk$ of 0.172661, 0.157844, 0.159315, and 0.156067. Validation contains 20,880 images, 1,227 patients, and 33 centers. Appendix Table~\ref{tab:freeze} records the four frozen checkpoints; Figure~\ref{fig:training} shows their trajectories under the common 90-epoch cap. Test risk determines ranking; validation documents selection.
-\inputtable{tab10_freeze}
-The four models use four GPUs with SyncBatchNorm and global batch 24 under the common training settings in Appendix~\ref{sec:appendix-implementation}. Validation selects from epochs 21--90 by $\risk$, image COR, then earlier epoch; selected checkpoints are frozen before test evaluation. Figure~\ref{fig:training} shows all 90 recorded epochs without smoothing. Total losses contain different auxiliary terms and serve as within-model diagnostics. Figure~\ref{fig:losses} shows the full model's loss components.
-\input{figures/fig08_training}
-\FloatBarrier

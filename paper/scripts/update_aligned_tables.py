@@ -5,10 +5,11 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import os
 from decimal import Decimal
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(os.environ.get("VCRE_PAPER_ROOT", Path(__file__).resolve().parents[2] / ".tmp/paper-generation")).resolve()
 SOURCE = ROOT / "results/aligned_ablation_20260926"
 METHODS = ["SFIBAI", "RE_WO_VIEW", "RE_WO_WEAKLOC", "SYNAP"]
 NAMES = dict(zip(METHODS, ["SFibAI", "w/o View", "w/o Weak Loc.", "VCRE-Fib"]))
@@ -121,6 +122,7 @@ def metric_rows(
 
 def main() -> None:
     """Validate bindings, render tables, and save the highlighting audit."""
+    (ROOT / "tables").mkdir(parents=True, exist_ok=True)
     BEST.clear()
     bindings = json.loads((SOURCE / "source_bindings.json").read_text(encoding="utf-8"))
     primary = read_csv("test/primary.csv")
