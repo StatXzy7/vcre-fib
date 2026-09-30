@@ -18,10 +18,25 @@ def test_unreviewed_images_rejected():
     assert guard.audit("paper/figures/assets/extra.png", b"synthetic")
 
 
-def test_manuscript_results_and_project_citation_are_not_released():
+def test_manuscript_results_and_unreviewed_bibliographies_are_not_released():
     assert guard.audit("paper/results/aligned_ablation_20260926/test/primary.csv", b"method,R_final\nExample,0.2\n")
     assert guard.audit("paper/main.tex", b"Synthetic manuscript")
-    assert guard.audit("CITATION.cff", b"cff-version: 1.2.0")
+    assert guard.audit("paper/references.bib", b"Synthetic bibliography")
+    assert guard.audit("docs/CITATION.bib", b"Synthetic bibliography")
+    assert guard.audit("docs/CITATION.cff", b"cff-version: 1.2.0")
+    assert guard.audit("paper/CITATION.cff", b"cff-version: 1.2.0")
+    assert guard.audit("citation.cff", b"cff-version: 1.2.0")
+    assert guard.audit("CITATION.BIB", b"Synthetic bibliography")
+
+
+def test_published_citation_files_allowed_with_private_content_checks():
+    assert guard.audit("CITATION.cff", b"cff-version: 1.2.0\n") == []
+    assert guard.audit("CITATION.bib", b"@misc{synthetic, year={2026}}\n") == []
+    assert guard.audit("third_party/SFibAI/CITATION.cff", b"cff-version: 1.2.0\n") == []
+    for path in guard.CITATION_FILES:
+        assert guard.audit(path, b"-----BEGIN " b"PRIVATE KEY-----")
+        assert guard.audit(path, b"test-" b"012345abcdef")
+        assert guard.audit(path, b"\xff")
 
 
 def test_private_data_and_uppercase_suffixes_fail_closed():

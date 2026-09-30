@@ -10,16 +10,24 @@
       "bytes": 724
     },
     ".gitignore": {
-      "sha256": "3e793c2d6cfc5ec2f3c3cbd67a4c0a5c56606e71deed8c391e8cc9428bf04aa9",
-      "bytes": 962
+      "sha256": "2dcc038aba3e3cf7ba995ed98fb7958612831124131c589df7cebb10ec319f57",
+      "bytes": 981
     },
     "AGENTS.md": {
-      "sha256": "ee5d4c4982ed69bc9998640c114a431f3e2fb0249c0a6b06b36a765dda50012f",
-      "bytes": 1137
+      "sha256": "e4d9d5b3a2b9070b1034d06af6ae7005d8917f5dca6a374f37056caa74e468c1",
+      "bytes": 1387
+    },
+    "CITATION.bib": {
+      "sha256": "4aeb4f84914c44e6de4d75bfcc172258f5d7183cd4a292092eb5f6af5507c027",
+      "bytes": 534
+    },
+    "CITATION.cff": {
+      "sha256": "e01478e2b03f2a66a5acd236a040fe7146a7030d4c4fcb4658c0465fc408ae47",
+      "bytes": 1461
     },
     "CONTRIBUTING.md": {
-      "sha256": "8dd3f436aa4b5b3648eb935335f103bcc8864e8d40a6de57f374a400cc39cb1c",
-      "bytes": 1638
+      "sha256": "779d44c45a6b5214c23b3a0efc9e8f51efd892ebc7315ea89ae65c525d4a76bc",
+      "bytes": 1814
     },
     "LICENSE": {
       "sha256": "1a021a249931dcaeb18fb79a44ac3d4ba109112f76292c3660d90101c155b137",
@@ -30,12 +38,12 @@
       "bytes": 533
     },
     "README.md": {
-      "sha256": "cd13d96ec7f7d4ea8cf9ba89256525da1c94698e31dec9b7dd4d90f519f473df",
-      "bytes": 3181
+      "sha256": "a70c004d3b39d7dc4e00f13cca3a757b84daab400beec95052192ca2fe0dc70d",
+      "bytes": 5668
     },
     "README.zh-CN.md": {
-      "sha256": "773c25f3d6ce044a46ea105c84f8a9bb13bb8da7fc55cda3892db6e40db1117f",
-      "bytes": 1278
+      "sha256": "3a5bb94d20dee382631e44ae4546934a9a2481e24a2305a765a27b0456bc26a0",
+      "bytes": 3273
     },
     "code/src/sfibai_b/__init__.py": {
       "sha256": "3b44ffd74a3e0cde6cd41d33cd1c8452a8a9ce3e0a5e4618a6f11a16b3ef8cc8",
@@ -134,8 +142,8 @@
       "bytes": 5754
     },
     "docs/PROVENANCE.md": {
-      "sha256": "fb0e9a19c8b3a646fe0c9b680b1ab4b16ae9cd322a66dc7d3e6235a28ea1fd3d",
-      "bytes": 4441
+      "sha256": "b4b1c35003f34120dcd3df4250505218bda54559482f80d797d8655d627cfb66",
+      "bytes": 4843
     },
     "docs/REPRODUCING.md": {
       "sha256": "e3f9361132c47ec5236c527d62dccaee131c17a74da2571064f43b6b2b7251a2",
@@ -170,8 +178,8 @@
       "bytes": 2424
     },
     "provenance/VALIDATION.md": {
-      "sha256": "69ed56d798199be0c134bc7a892ffe15b6420c73daca0dac780bc8039a350dd7",
-      "bytes": 3292
+      "sha256": "f3d8d01f69105f78fb9c903e1a30ba54b5f7ca58cf7fb6b38b82c4e7b31ec2b7",
+      "bytes": 4397
     },
     "pyproject.toml": {
       "sha256": "387dfb3fbb11f2ce0beab706417ac3a0d5d8bea23e5a7c608c94bbc32b8edc63",
@@ -562,8 +570,8 @@
       "bytes": 11431
     },
     "tests/test_release_guard.py": {
-      "sha256": "8cc7213f407e142067f6597a0106373368a486cdbb2dd0090c140a7d7883ea0e",
-      "bytes": 2949
+      "sha256": "ba25962c09df6e568eec29f34ff8062aceaa0fe87a7b6455d534894d87414815",
+      "bytes": 3827
     },
     "third_party/SFibAI/CITATION.cff": {
       "sha256": "644ad835cc541bb88aef5b84b010fd730c1d306a1e869f192a08111bca76fa99",
@@ -646,8 +654,8 @@
       "bytes": 1170
     },
     "tools/check_release.py": {
-      "sha256": "3b1e9863e4cb84a2f291dea622bc51e46471005a63a15a57fb539b88a228f33a",
-      "bytes": 7790
+      "sha256": "72b635983eb721692c747253be4c961776486790df1f00af804153e76c42e2a9",
+      "bytes": 7899
     },
     "tools/prepare_data.py": {
       "sha256": "262b69445a3573dff4bea2a9b27296e2ff14b550fbf044dfc8aef639f3efad02",

@@ -59,6 +59,11 @@ checkpoint, or either version to reproduce all paper numbers merely by renaming 
 - Restricted the public assets to code and the main figure. Manuscript sources,
   aggregate results and project citation metadata were removed from the current
   tree after the initial publication; earlier Git history retains that first snapshot.
+- After publication of [arXiv:2609.32840](https://arxiv.org/abs/2609.32840), added
+  the paper title, authors, links, method overview, and citation metadata to the
+  English and Chinese entry points. Root `CITATION.cff` and `CITATION.bib` are
+  explicitly allowed by the publication guard. The existing main-figure PDF
+  matches the arXiv submission-source figure; its PDF, PNG, and PPTX are retained.
 - Preserved model and loss equations. The original research checkout, frozen source
   snapshot, metrics, predictions and checkpoints were not modified.
 

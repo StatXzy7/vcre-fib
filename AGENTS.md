@@ -3,8 +3,12 @@
 - Use English for primary documentation, issues, pull requests, commits, and new
   comments. Keep the Chinese README as an optional translation.
 - Read and write text as UTF-8 without BOM.
-- Keep the README concise: code overview, main figure, setup, usage, and license.
-- Do not add manuscript text, result tables, project citation metadata, clinical
+- Keep the README concise: paper and code overview, citation, main figure, setup,
+  usage, and license. Paper metadata must match the published arXiv record.
+- The published VCRE-Fib citation is allowed in root `CITATION.cff` and
+  `CITATION.bib`, and in the README. Preserve the pinned third-party citation;
+  keep other bibliographies outside the checkout.
+- Do not add manuscript text, result tables, clinical
   data, annotations, patient/image lists, per-example outputs, weights, or credentials.
 - The main figure is the only public media asset. Render previews from its PDF.
 - `code/` and `research/` implement the regional architecture. The distinct

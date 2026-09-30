@@ -30,8 +30,9 @@ Checks performed for the source release on 2026-09-26/27:
   directory `third_party/SFibAI/src/sfibai/data` is included explicitly; the root
   dataset ignore no longer excludes Python packages of the same name.
 
-The current release contains code and the main figure only. Manuscript text,
-aggregate results, and project citation metadata are absent from the current tree.
+The current release contains code, the main figure, and citation metadata for
+[arXiv:2609.32840](https://arxiv.org/abs/2609.32840). Manuscript text and
+aggregate result tables are absent from the current tree.
 The build and private-data checks above record local verification, not distributed
 paper assets or numerical-reproduction claims. GitHub CI results are available in
 the repository's Actions tab.
@@ -40,6 +41,25 @@ No model training, new test inference, new bootstrap, or numerical replication o
 the paper's results was performed for this release. Read `docs/PROVENANCE.md` for
 the unresolved source/result binding. CLI dry-runs and CPU checks do not certify
 CUDA/DDP end-to-end execution on another machine.
+
+## Published-paper metadata update
+
+- Verified the paper title and all eight authors, in order, against the live
+  [arXiv record](https://arxiv.org/abs/2609.32840).
+- Validated `CITATION.cff` against the official CFF 1.2.0 schema. Its preferred
+  citation and the README BibTeX agree with `CITATION.bib`.
+- Verified the existing main-figure PDF byte-for-byte against the published
+  arXiv v1 source archive. SHA-256:
+  `d3ce5acb9b9d52f7991b71d8e3c3584d6f9e4566166dc5dd0f962f970cefa94f`.
+- Checked local README links and UTF-8 text, including the Chinese translation.
+- Local software tests: 58 passed, 3 skipped. The skipped checks require CUDA
+  (two tests) or private Data V4 inputs (one test). An existing tensor-to-scalar
+  warning remains in a loss test. Python 3.13.9, torch 2.12.1+cpu,
+  torchvision 0.27.1+cpu, and pytest 9.1.1 were used for this check.
+- The citation allowlist retains private-artifact, credential, and UTF-8 checks.
+  These checks validate packaging and metadata, not numerical reproduction.
+
+## Initial-release check environment
 
 Local software check environment: Python 3.10.20, torch 2.11.0+cu128,
 torchvision 0.26.0+cu128, numpy 2.2.6, pandas 2.3.3, opencv-python 5.0.0.93,

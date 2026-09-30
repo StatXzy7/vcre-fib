@@ -13,7 +13,8 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = "provenance/RELEASE_MANIFEST.json"
 IMPORT_MANIFEST = "provenance/IMPORT_MANIFEST.json"
-TEXT = {".py", ".md", ".toml", ".yml", ".yaml", ".json", ".cff", ".txt"}
+TEXT = {".py", ".md", ".toml", ".yml", ".yaml", ".json", ".cff", ".bib", ".txt"}
+CITATION_FILES = {"CITATION.cff", "CITATION.bib", "third_party/SFibAI/CITATION.cff"}
 FORBIDDEN_SUFFIXES = {".pt", ".pth", ".ckpt", ".safetensors", ".npy", ".npz", ".parquet", ".h5", ".hdf5", ".dcm", ".nii", ".jsonl", ".pem", ".key", ".zip", ".gz"}
 FORBIDDEN_DIRECTORIES = {"development", "outputs", "runs", "checkpoints", "research-private", ".ssh", ".aws", ".git", "__pycache__"}
 MEDIA = {
@@ -44,8 +45,8 @@ def audit(path: str, payload: bytes) -> list[str]:
     relative = Path(path)
     suffix = relative.suffix.lower()
     failures: list[str] = []
-    if suffix in {".tex", ".bib", ".sty", ".bst", ".csv"} or path.lower() == "citation.cff":
-        failures.append("manuscript, results, or project citation metadata are not released")
+    if suffix in {".tex", ".bib", ".cff", ".sty", ".bst", ".csv"} and path not in CITATION_FILES:
+        failures.append("manuscript, results, or bibliography outside the published-citation allowlist")
     parts = {part.lower() for part in relative.parts}
     if suffix in FORBIDDEN_SUFFIXES or parts & FORBIDDEN_DIRECTORIES or relative.parts[0].lower() == "data":
         failures.append("forbidden private artifact")

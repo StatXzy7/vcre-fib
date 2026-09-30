@@ -1,0 +1,53 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the VCRE-Fib arXiv preprint in preferred-citation."
+type: software
+title: "VCRE-Fib"
+authors:
+  - family-names: Xu
+    given-names: Ziyang
+  - family-names: An
+    given-names: Shuli
+  - family-names: Zhou
+    given-names: Hao
+  - family-names: Zhong
+    given-names: Haitian
+  - family-names: Wu
+    given-names: Tingting
+  - family-names: Wang
+    given-names: Tao
+  - family-names: Yang
+    given-names: Kun
+  - family-names: Zeng
+    given-names: Tieyong
+repository-code: "https://github.com/StatXzy7/vcre-fib"
+url: "https://github.com/StatXzy7/vcre-fib"
+license: Apache-2.0
+preferred-citation:
+  type: article
+  title: "VCRE-Fib: View-Conditioned Regional Evidence for Fine-Grained Ultrasound Grading of Schistosoma japonicum-Associated Liver Fibrosis"
+  authors:
+    - family-names: Xu
+      given-names: Ziyang
+    - family-names: An
+      given-names: Shuli
+    - family-names: Zhou
+      given-names: Hao
+    - family-names: Zhong
+      given-names: Haitian
+    - family-names: Wu
+      given-names: Tingting
+    - family-names: Wang
+      given-names: Tao
+    - family-names: Yang
+      given-names: Kun
+    - family-names: Zeng
+      given-names: Tieyong
+  journal: "arXiv"
+  year: 2026
+  month: 9
+  doi: "10.48550/arXiv.2609.32840"
+  url: "https://arxiv.org/abs/2609.32840"
+  identifiers:
+    - type: other
+      value: "arXiv:2609.32840"
+      description: "arXiv preprint identifier"

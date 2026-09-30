@@ -44,12 +44,12 @@ research-private/
 !paper/figures/editable/Figure1.pptx
 !paper/figures/previews/fig01_architecture.png
 # Generated builds and local environments
-# Manuscript text, results, and project citation metadata are not released.
+# Manuscript text and results are not released; only the published paper citation is allowed.
 *.tex
 *.bib
+!/CITATION.bib
 *.sty
 *.bst
-/CITATION.cff
 /paper/results/
 /paper/tables/
 /paper/sections/

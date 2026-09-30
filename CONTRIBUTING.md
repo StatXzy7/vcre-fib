@@ -4,8 +4,11 @@ Use English for documentation, issues, pull requests, commits, and new comments.
 `README.md` is the primary entry point; `README.zh-CN.md` is an optional translation.
 Preserve historical source comments rather than rewriting frozen snapshots for style.
 
-Maintain public code here. Keep datasets, runs, manuscript text, result tables, and
-project citation metadata outside the checkout. There is no automatic bulk import
+Maintain public code, the main figure, and citation metadata for the published
+VCRE-Fib preprint here. Root `CITATION.cff`, root `CITATION.bib`, and the README
+must agree with the [arXiv record](https://arxiv.org/abs/2609.32840).
+Keep datasets, runs, manuscript text, and result tables outside the checkout.
+There is no automatic bulk import
 or two-way synchronization with the private research directory.
 
 Before a commit:
